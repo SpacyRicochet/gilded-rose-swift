@@ -241,6 +241,56 @@ class GildedRoseTests: XCTestCase {
         XCTAssertEqual(app.items[0].quality, 50)
     }
     
+    // MARK: - Conjured items
+    
+    func test_updateQuality_onConjuredItem_decreasesSellInByOne() throws {
+        // Given
+        let items = [Item(name: "Conjured Healing potion", sellIn: 1, quality: 0)]
+        let app = GildedRose(items: items)
+        
+        // When
+        app.updateQuality()
+        
+        // Then
+        XCTAssertEqual(app.items[0].sellIn, 0)
+    }
+    
+    func test_updateQuality_onConjuredItem_beforeItsSellIn_decreasesQualityByTwo() throws {
+        // Given
+        let items = [Item(name: "Conjured Healing potion", sellIn: 1, quality: 2)]
+        let app = GildedRose(items: items)
+        
+        // When
+        app.updateQuality()
+        
+        // Then
+        XCTAssertEqual(app.items[0].quality, 0)
+    }
+    
+    func test_updateQuality_onConjuredItem_pastItsSellIn_decreasesQualityByFour() throws {
+        // Given
+        let items = [Item(name: "Conjured Healing potion", sellIn: 0, quality: 4)]
+        let app = GildedRose(items: items)
+        
+        // When
+        app.updateQuality()
+        
+        // Then
+        XCTAssertEqual(app.items[0].quality, 0)
+    }
+    
+    func test_updateQuality_onConjuredItem_doesNotDecreasesQualityPastZero() throws {
+        // Given
+        let items = [Item(name: "Conjured Healing potion", sellIn: 0, quality: 1)]
+        let app = GildedRose(items: items)
+        
+        // When
+        app.updateQuality()
+        
+        // Then
+        XCTAssertEqual(app.items[0].quality, 0)
+    }
+    
     // MARK: - System helpers
     
     static var allTests = [
